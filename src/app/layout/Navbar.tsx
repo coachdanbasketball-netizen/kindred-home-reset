@@ -1,0 +1,117 @@
+import { useRef, useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { motion } from "motion/react";
+import { Menu, X, ChevronDown, ArrowRight, Leaf } from "lucide-react";
+import { NAV_ABOUT, ease } from "../data/content";
+
+export function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
+  const aboutRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onOutside(e: MouseEvent) {
+      if (aboutRef.current && !aboutRef.current.contains(e.target as Node)) setAboutOpen(false);
+    }
+    document.addEventListener("mousedown", onOutside);
+    return () => document.removeEventListener("mousedown", onOutside);
+  }, []);
+
+  const go = (path: string) => {
+    navigate(path);
+    setMobileOpen(false);
+    setAboutOpen(false);
+  };
+
+  const isAbout = ["/about", "/connect", "/policy"].includes(location.pathname);
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="flex items-center justify-between h-[73px]">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+              <Leaf className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={1.5} />
+            </div>
+            <span className="font-display font-semibold text-[16px] text-foreground tracking-tight">
+              Kindred Home Reset
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/" className={`text-sm transition-colors ${location.pathname === "/" ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}>
+              Home
+            </Link>
+
+            <Link to="/services" className={`text-sm transition-colors ${location.pathname === "/services" ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}>
+              Services &amp; Pricing
+            </Link>
+
+            <div ref={aboutRef} className="relative">
+              <button
+                onClick={() => setAboutOpen(o => !o)}
+                className={`flex items-center gap-1 text-sm transition-colors ${isAbout ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                About
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${aboutOpen ? "rotate-180" : ""}`} />
+              </button>
+              {aboutOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, ease }}
+                  className="absolute top-full right-0 mt-4 w-52 bg-background border border-border shadow-xl overflow-hidden"
+                >
+                  <div className="py-2">
+                    {NAV_ABOUT.map(item => (
+                      <button key={item.path} onClick={() => go(item.path)} className="w-full text-left px-5 py-2.5 text-sm text-foreground hover:bg-muted transition-colors">
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            <Link to="/connect" className="text-sm text-primary font-medium hover:text-primary/80 transition-colors flex items-center gap-1.5 group">
+              Connect
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
+
+          <button onClick={() => setMobileOpen(o => !o)} className="md:hidden p-2 -mr-1 text-foreground" aria-label="Toggle menu">
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {mobileOpen && (
+        <div className="md:hidden border-t border-border bg-background">
+          <div className="px-6 py-3 space-y-0.5">
+            <button onClick={() => go("/")} className="w-full text-left px-2 py-3 text-sm font-medium text-foreground border-b border-border/50">Home</button>
+            <button onClick={() => go("/services")} className="w-full text-left px-2 py-3 text-sm font-medium text-foreground border-b border-border/50">Services &amp; Pricing</button>
+            <div className="border-b border-border/50">
+              <button onClick={() => setMobileAboutOpen(o => !o)} className="w-full flex items-center justify-between px-2 py-3 text-sm font-medium text-foreground">
+                About
+                <ChevronDown className={`w-4 h-4 transition-transform ${mobileAboutOpen ? "rotate-180" : ""}`} />
+              </button>
+              {mobileAboutOpen && (
+                <div className="pb-2">
+                  {NAV_ABOUT.map(item => (
+                    <button key={item.path} onClick={() => go(item.path)} className="w-full text-left pl-4 pr-2 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={() => go("/connect")} className="w-full text-left px-2 py-3 text-sm font-medium text-primary">Connect →</button>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
