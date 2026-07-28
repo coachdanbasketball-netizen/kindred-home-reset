@@ -76,8 +76,8 @@ export function Navbar() {
               )}
             </div>
 
-            <Link to="/connect" className="text-sm text-primary font-medium hover:text-primary/80 transition-colors flex items-center gap-1.5 group">
-              Connect
+            <Link to="/connect" className="text-sm rounded-md bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity flex items-center gap-1.5 group px-4 py-2">
+              Book Now
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
@@ -108,7 +108,7 @@ export function Navbar() {
                 </div>
               )}
             </div>
-            <button onClick={() => go("/connect")} className="w-full text-left px-2 py-3 text-sm font-medium text-primary">Connect →</button>
+            <button onClick={() => go("/connect")} className="w-full text-left px-4 py-3 mt-2 text-sm font-semibold bg-primary text-primary-foreground">Book Now →</button>
           </div>
         </div>
       )}
