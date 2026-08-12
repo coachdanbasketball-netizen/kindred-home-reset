@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
-import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle, Sparkles, Pause, Play } from "lucide-react";
 import { FadeUp } from "../app/components/FadeUp";
 import { Label } from "../app/components/Label";
 import { SERVICES, TESTIMONIALS, ease } from "../app/data/content";
@@ -9,6 +9,8 @@ import { SERVICES, TESTIMONIALS, ease } from "../app/data/content";
 export default function HomePage() {
   const navigate = useNavigate();
   const [tIdx, setTIdx] = useState(0);
+  const [autoPlay, setAutoPlay] = useState(true);
+  const [testimonialHover, setTestimonialHover] = useState(false);
 
   // ── Parallax refs ───────────────────────────────────────────────────────
   const heroRef = useRef<HTMLElement>(null);
@@ -39,11 +41,12 @@ export default function HomePage() {
   // About teaser image: subtle upward drift
   const aboutImgY = useTransform(aboutImgProgress, [0, 1], ["6%", "-6%"]);
 
-  // Testimonial auto-cycle
+  // Testimonial auto-cycle — paused via explicit control or hover/focus (WCAG 2.2.2)
   useEffect(() => {
+    if (!autoPlay || testimonialHover) return;
     const t = setInterval(() => setTIdx(i => (i + 1) % TESTIMONIALS.length), 5500);
     return () => clearInterval(t);
-  }, []);
+  }, [autoPlay, testimonialHover]);
 
   return (
     <div className="pt-[73px]">
@@ -99,7 +102,7 @@ export default function HomePage() {
                 className="group inline-flex items-center gap-2 text-sm font-semibold text-foreground border border-foreground px-6 py-3 hover:bg-foreground hover:text-background transition-colors"
               >
                 Begin your reset
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </button>
               <button
                 onClick={() => navigate("/services")}
@@ -145,7 +148,7 @@ export default function HomePage() {
             </FadeUp>
             <FadeUp delay={0.1}>
               <button onClick={() => navigate("/services")} className="text-sm text-primary font-medium hidden sm:flex items-center gap-1.5 hover:gap-2.5 transition-all">
-                View all 10 <ArrowRight className="w-3.5 h-3.5" />
+                View all 10 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </FadeUp>
           </div>
@@ -161,7 +164,7 @@ export default function HomePage() {
                 viewport={{ once: true, margin: "-40px" }}
                 className="flex items-start gap-6 md:gap-10 py-7 border-b border-border group"
               >
-                <span className="font-display text-sm text-muted-foreground/40 w-8 shrink-0 pt-1 tabular-nums">
+                <span className="font-display text-sm text-muted-foreground w-8 shrink-0 pt-1 tabular-nums" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="flex-1 min-w-0">
@@ -172,7 +175,7 @@ export default function HomePage() {
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">{service.short}</p>
                     </div>
-                    <Icon className="w-5 h-5 text-muted-foreground/30 shrink-0 mt-1 group-hover:text-primary/60 transition-colors hidden sm:block" strokeWidth={1.5} />
+                    <Icon className="w-5 h-5 text-muted-foreground/30 shrink-0 mt-1 group-hover:text-primary/60 transition-colors hidden sm:block" strokeWidth={1.5} aria-hidden="true" />
                   </div>
                 </div>
               </motion.div>
@@ -191,7 +194,7 @@ export default function HomePage() {
       <section ref={quoteRef} className="py-24 bg-primary text-primary-foreground overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <motion.div style={{ y: quoteY }} className="max-w-3xl mb-16">
-            <p className="font-display font-semibold text-primary-foreground/30 text-sm tracking-widest uppercase mb-8">
+            <p className="font-display font-semibold text-primary-foreground text-sm tracking-widest uppercase mb-8">
               Why Kindred
             </p>
             <blockquote
@@ -211,7 +214,7 @@ export default function HomePage() {
               ].map((item, i) => (
                 <div key={item.label} className={`py-8 pr-6 ${i > 0 ? "pl-6 border-l border-primary-foreground/20" : ""}`}>
                   <p className="font-display text-base font-semibold text-primary-foreground mb-1.5">{item.label}</p>
-                  <p className="text-sm text-primary-foreground/55">{item.desc}</p>
+                  <p className="text-sm text-primary-foreground/90">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -254,13 +257,13 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     className="flex items-start gap-3"
                   >
-                    <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
+                    <CheckCircle className="w-4 h-4 text-primary mt-0.5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
                     <span className="text-sm text-foreground">{item}</span>
                   </motion.div>
                 ))}
               </div>
               <button onClick={() => navigate("/about")} className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5 group">
-                Meet the team <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                Meet the team <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
               </button>
             </FadeUp>
           </div>
@@ -268,7 +271,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Testimonial — AnimatePresence crossfade ───────────────────────── */}
-      <section className="py-24 bg-secondary/40 border-t border-b border-border overflow-hidden">
+      <section
+        className="py-24 bg-secondary/40 border-t border-b border-border overflow-hidden"
+        onMouseEnter={() => setTestimonialHover(true)}
+        onMouseLeave={() => setTestimonialHover(false)}
+        onFocus={() => setTestimonialHover(true)}
+        onBlur={() => setTestimonialHover(false)}
+      >
         <div className="max-w-3xl mx-auto px-6 lg:px-10 text-center">
           <Label>Kind Words</Label>
           <div className="mt-4 min-h-[200px] flex flex-col items-center justify-center">
@@ -291,15 +300,26 @@ export default function HomePage() {
                 <p className="text-xs text-muted-foreground mt-1">{TESTIMONIALS[tIdx].context}</p>
               </motion.div>
             </AnimatePresence>
-            <div className="flex justify-center gap-2 mt-8">
-              {TESTIMONIALS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setTIdx(i)}
-                  aria-label={`Testimonial ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-400 ${i === tIdx ? "w-6 bg-primary" : "w-1.5 bg-foreground/20"}`}
-                />
-              ))}
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <div className="flex justify-center gap-2" role="group" aria-label="Choose testimonial">
+                {TESTIMONIALS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setTIdx(i)}
+                    aria-label={`Testimonial ${i + 1} of ${TESTIMONIALS.length}`}
+                    aria-current={i === tIdx ? "true" : undefined}
+                    className={`h-1.5 rounded-full transition-all duration-400 ${i === tIdx ? "w-6 bg-primary" : "w-1.5 bg-foreground/60"}`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setAutoPlay(p => !p)}
+                aria-label={autoPlay ? "Pause automatic testimonial rotation" : "Resume automatic testimonial rotation"}
+                aria-pressed={!autoPlay}
+                className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {autoPlay ? <Pause className="w-3.5 h-3.5" aria-hidden="true" /> : <Play className="w-3.5 h-3.5" aria-hidden="true" />}
+              </button>
             </div>
           </div>
         </div>
@@ -322,7 +342,7 @@ export default function HomePage() {
                   className="group inline-flex items-center gap-3 text-base font-medium text-primary border-b border-primary pb-1 hover:gap-4 transition-all"
                 >
                   Schedule a free consultation
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </button>
                 <p className="text-xs text-muted-foreground mt-3">No commitment required.</p>
               </div>
@@ -340,7 +360,7 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground mt-1.5 max-w-md">Tips, stories, and quiet wisdom for creating a home that supports the life you want. Launching on Substack.</p>
           </div>
           <div className="flex items-center gap-2.5 text-sm text-muted-foreground border border-border px-5 py-3 shrink-0">
-            <Sparkles className="w-4 h-4 text-accent" strokeWidth={1.5} />
+            <Sparkles className="w-4 h-4 text-accent" strokeWidth={1.5} aria-hidden="true" />
             Blog launching soon via Substack
           </div>
         </FadeUp>

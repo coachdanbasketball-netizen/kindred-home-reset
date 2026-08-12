@@ -8,13 +8,13 @@
   --card-foreground: #3A3530;
   --popover: #FDFAF6;
   --popover-foreground: #3A3530;
-  --primary: #8AA3B1;
+  --primary: #4F6B7A;
   --primary-foreground: #FDFAF6;
   --secondary: #EAE0D3;
   --secondary-foreground: #3A3530;
   --muted: #EDE8E1;
-  --muted-foreground: #8A7E74;
-  --accent: #B07A5E;
+  --muted-foreground: #726860;
+  --accent: #8C5D42;
   --accent-foreground: #FDFAF6;
   --destructive: #c0392b;
   --destructive-foreground: #ffffff;
@@ -123,11 +123,26 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Visible, WCAG 2.2 AA-compliant focus indicator for all interactive elements. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /**

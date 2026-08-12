@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { motion } from "motion/react";
 import { ArrowRight, Check, CheckCircle, Mail, Phone, MapPin, Clock } from "lucide-react";
@@ -18,9 +18,14 @@ export default function ConnectPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const confirmationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (submitted) confirmationRef.current?.focus();
+  }, [submitted]);
 
   const inputClass =
-    "w-full px-4 py-3 bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all";
+    "w-full px-4 py-3 bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 transition-all";
 
   const toggleService = (id: string) => {
     setForm(f => ({
@@ -61,7 +66,7 @@ export default function ConnectPage() {
                 const Icon = item.icon;
                 return (
                   <div key={item.label} className="flex items-start gap-4 pt-5 border-b border-border pb-5">
-                    <Icon className="w-4 h-4 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
+                    <Icon className="w-4 h-4 text-primary mt-0.5 shrink-0" strokeWidth={1.5} aria-hidden="true" />
                     <div>
                       <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-0.5">{item.label}</p>
                       <p className="text-sm text-foreground">{item.value}</p>
@@ -84,9 +89,12 @@ export default function ConnectPage() {
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, ease }}
-                className="flex flex-col items-center justify-center text-center py-16 border border-border"
+                role="status"
+                tabIndex={-1}
+                ref={confirmationRef}
+                className="flex flex-col items-center justify-center text-center py-16 border border-border outline-none"
               >
-                <CheckCircle className="w-10 h-10 text-primary mb-5" strokeWidth={1.5} />
+                <CheckCircle className="w-10 h-10 text-primary mb-5" strokeWidth={1.5} aria-hidden="true" />
                 <h3 className="font-display text-2xl font-semibold text-foreground mb-3">Thank you</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
                   We&rsquo;ve received your message and will be in touch within one business day.
@@ -97,22 +105,22 @@ export default function ConnectPage() {
                 <h3 className="font-display text-xl font-semibold text-foreground mb-6">Send us a message</h3>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Name *</label>
-                    <input required type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className={inputClass} placeholder="Jane Smith" />
+                    <label htmlFor="contact-name" className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Name *</label>
+                    <input id="contact-name" required aria-required="true" type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className={inputClass} placeholder="Jane Smith" autoComplete="name" />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Email *</label>
-                    <input required type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inputClass} placeholder="jane@email.com" />
+                    <label htmlFor="contact-email" className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Email *</label>
+                    <input id="contact-email" required aria-required="true" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inputClass} placeholder="jane@email.com" autoComplete="email" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Phone</label>
-                  <input type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="(555) 000-0000" />
+                  <label htmlFor="contact-phone" className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Phone</label>
+                  <input id="contact-phone" type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="(555) 000-0000" autoComplete="tel" />
                 </div>
-                <div>
-                  <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
-                    Service Interest <span className="normal-case font-normal text-muted-foreground/70">(select all that apply)</span>
-                  </label>
+                <fieldset className="border-0 p-0 m-0 min-w-0">
+                  <legend className="w-full text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 p-0">
+                    Service Interest <span className="normal-case font-normal text-muted-foreground">(select all that apply)</span>
+                  </legend>
                   <div className="flex flex-wrap gap-2">
                     {SERVICES.map(s => {
                       const selected = form.services.includes(s.id);
@@ -128,7 +136,7 @@ export default function ConnectPage() {
                               : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
                           }`}
                         >
-                          {selected && <Check className="w-3 h-3" />}
+                          {selected && <Check className="w-3 h-3" aria-hidden="true" />}
                           {s.title}
                         </button>
                       );
@@ -146,20 +154,20 @@ export default function ConnectPage() {
                               : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
                           }`}
                         >
-                          {selected && <Check className="w-3 h-3" />}
+                          {selected && <Check className="w-3 h-3" aria-hidden="true" />}
                           Not sure yet
                         </button>
                       );
                     })()}
                   </div>
-                </div>
+                </fieldset>
                 <div>
-                  <label className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Tell us about your space *</label>
-                  <textarea required rows={6} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className={`${inputClass} resize-none`} placeholder="Share what's going on at home — the more context, the better we can help." />
+                  <label htmlFor="contact-message" className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">Tell us about your space *</label>
+                  <textarea id="contact-message" required aria-required="true" rows={6} value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} className={`${inputClass} resize-none`} placeholder="Share what's going on at home — the more context, the better we can help." />
                 </div>
                 <button type="submit" className="group w-full py-3.5 bg-primary text-primary-foreground text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
                   Send Message
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </button>
                 <p className="text-xs text-muted-foreground text-center">We respect your privacy and will never share your information.</p>
               </form>

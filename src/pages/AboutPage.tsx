@@ -119,7 +119,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">{member.role}</p>
-                <p className="text-xs text-muted-foreground/50 mt-0.5 italic">Bio coming soon</p>
+                <p className="text-xs text-muted-foreground mt-0.5 italic">Bio coming soon</p>
               </motion.div>
             ))}
           </div>
@@ -137,7 +137,7 @@ export default function AboutPage() {
               className="group shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-foreground border border-foreground px-6 py-3 hover:bg-foreground hover:text-background transition-colors"
             >
               Get in Touch
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
             </button>
           </div>
         </FadeUp>
