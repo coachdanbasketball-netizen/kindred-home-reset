@@ -1,0 +1,79 @@
+# .github/workflows/deploy.yml
+# Builds the Vite site and publishes it to GitHub Pages on every push to main.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once; a newer push cancels an in-flight build.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # No `cache: npm` here on purpose: setup-node hard-fails when the repo
+      # has no package-lock.json, which this project may not.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json', 'package.json') }}
+          restore-keys: npm-
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-audit --no-fund
+          fi
+
+      - name: Build
+        run: npm run build
+
+      # Pages has no server-side rewrites. Serving the same HTML as the 404
+      # page makes react-router paths (/about, /contact) load on direct hits.
+      - name: Add SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      # Keeps the custom domain attached even if the Pages setting resets.
+      - name: Add CNAME
+        run: echo "thekindredlife.com" > dist/CNAME
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

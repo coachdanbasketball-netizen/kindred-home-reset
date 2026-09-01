@@ -52,7 +52,7 @@ export default function AboutPage() {
               <h2 className="font-display text-3xl font-semibold text-foreground mb-8">Our story</h2>
               <div className="space-y-5 text-muted-foreground leading-relaxed text-sm mb-12">
                 <p>
-                  Kindred Home Reset was born from a simple belief: every family deserves a home that feels calm, functional, and truly theirs. We've seen firsthand how clutter, transitions, and overwhelm can make a house feel more like a burden than a refuge.
+                  The Kindred Life was born from a simple belief: every family deserves a home that feels calm, functional, and truly theirs. We've seen firsthand how clutter, transitions, and overwhelm can make a house feel more like a burden than a refuge.
                 </p>
                 <p>
                   We come alongside our clients with patience, practical skill, and genuine care — whether they're navigating a big move, a significant life change, or simply ready to breathe again in their own space.

@@ -12,7 +12,7 @@ export function Footer() {
               <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
                 <Leaf className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={1.5} aria-hidden="true" />
               </div>
-              <span className="font-display text-[16px] font-semibold">Kindred Home Reset</span>
+              <span className="font-display text-[16px] font-semibold">The Kindred Life</span>
             </Link>
             <p className="text-sm text-background/70 leading-relaxed max-w-xs mb-7">
               Helping busy families reclaim their spaces through compassionate, practical home organizing and reset services.
@@ -42,6 +42,7 @@ export function Footer() {
             <div className="space-y-3">
               <Link to="/about" className="block text-sm text-background/70 hover:text-background transition-colors">About Us</Link>
               <Link to="/connect" className="block text-sm text-background/70 hover:text-background transition-colors">Let's Connect</Link>
+              <Link to="/faq" className="block text-sm text-background/70 hover:text-background transition-colors">FAQ</Link>
               <Link to="/policy" className="block text-sm text-background/70 hover:text-background transition-colors">Policy</Link>
             </div>
             <div className="mt-7 pt-5 border-t border-background/10">
@@ -54,7 +55,7 @@ export function Footer() {
           </nav>
         </div>
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-background/65">© 2025 Kindred Home Reset. All rights reserved.</p>
+          <p className="text-xs text-background/65">© 2025 The Kindred Life. All rights reserved.</p>
           <Link to="/policy" className="text-xs text-background/65 hover:text-background transition-colors">Privacy & Policy</Link>
         </div>
       </div>

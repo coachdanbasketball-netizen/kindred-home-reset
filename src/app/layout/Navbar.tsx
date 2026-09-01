@@ -48,7 +48,7 @@ export function Navbar() {
               <Leaf className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={1.5} aria-hidden="true" />
             </div>
             <span className="font-display font-semibold text-[16px] text-foreground tracking-tight">
-              Kindred Home Reset
+              The Kindred Life
             </span>
           </Link>
 
@@ -67,6 +67,14 @@ export function Navbar() {
               className={`text-sm transition-colors ${location.pathname === "/services" ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
             >
               Services &amp; Pricing
+            </Link>
+
+            <Link
+              to="/faq"
+              aria-current={location.pathname === "/faq" ? "page" : undefined}
+              className={`text-sm transition-colors ${location.pathname === "/faq" ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              FAQ
             </Link>
 
             <div ref={aboutRef} className="relative">
@@ -124,6 +132,7 @@ export function Navbar() {
           <div className="px-6 py-3 space-y-0.5">
             <button onClick={() => go("/")} aria-current={location.pathname === "/" ? "page" : undefined} className="w-full text-left px-2 py-3 text-sm font-medium text-foreground border-b border-border/50">Home</button>
             <button onClick={() => go("/services")} aria-current={location.pathname === "/services" ? "page" : undefined} className="w-full text-left px-2 py-3 text-sm font-medium text-foreground border-b border-border/50">Services &amp; Pricing</button>
+            <button onClick={() => go("/faq")} aria-current={location.pathname === "/faq" ? "page" : undefined} className="w-full text-left px-2 py-3 text-sm font-medium text-foreground border-b border-border/50">FAQ</button>
             <div className="border-b border-border/50">
               <button
                 onClick={() => setMobileAboutOpen(o => !o)}

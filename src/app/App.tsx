@@ -7,13 +7,15 @@ import ServicesPage from "../pages/ServicesPage";
 import AboutPage from "../pages/AboutPage";
 import ConnectPage from "../pages/ConnectPage";
 import PolicyPage from "../pages/PolicyPage";
+import FAQPage from "../pages/FAQPage";
 
 const PAGE_TITLES: Record<string, string> = {
-  "/": "Kindred Home Reset | Home Organizing & Reset Services",
-  "/services": "Services & Pricing | Kindred Home Reset",
-  "/about": "About Us | Kindred Home Reset",
-  "/connect": "Let's Connect | Kindred Home Reset",
-  "/policy": "Our Policies | Kindred Home Reset",
+  "/": "The Kindred Life | Home Organizing & Reset Services",
+  "/services": "Services & Pricing | The Kindred Life",
+  "/about": "About Us | The Kindred Life",
+  "/connect": "Let's Connect | The Kindred Life",
+  "/policy": "Our Policies | The Kindred Life",
+  "/faq": "FAQ | The Kindred Life",
 };
 
 export default function App() {
@@ -23,7 +25,7 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-    document.title = PAGE_TITLES[pathname] ?? "Kindred Home Reset";
+    document.title = PAGE_TITLES[pathname] ?? "The Kindred Life";
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
@@ -47,6 +49,7 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/connect" element={<ConnectPage />} />
           <Route path="/policy" element={<PolicyPage />} />
+          <Route path="/faq" element={<FAQPage />} />
         </Routes>
       </main>
       <Footer />
