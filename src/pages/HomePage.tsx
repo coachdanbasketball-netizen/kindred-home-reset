@@ -148,7 +148,7 @@ export default function HomePage() {
             </FadeUp>
             <FadeUp delay={0.1}>
               <button onClick={() => navigate("/services")} className="text-sm text-primary font-medium hidden sm:flex items-center gap-1.5 hover:gap-2.5 transition-all">
-                View all 10 <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                View all {SERVICES.length} <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             </FadeUp>
           </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
                       <h3 className="font-display text-lg md:text-xl font-semibold text-foreground mb-1.5 leading-snug group-hover:text-primary transition-colors duration-300">
                         {service.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">{service.short}</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">{service.description}</p>
                     </div>
                     <Icon className="w-5 h-5 text-muted-foreground/30 shrink-0 mt-1 group-hover:text-primary/60 transition-colors hidden sm:block" strokeWidth={1.5} aria-hidden="true" />
                   </div>
@@ -184,7 +184,7 @@ export default function HomePage() {
 
           <div className="pt-6 sm:hidden">
             <button onClick={() => navigate("/services")} className="text-sm text-primary font-medium flex items-center gap-1.5">
-              View all 10 services <ArrowRight className="w-3.5 h-3.5" />
+              View all {SERVICES.length} services <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
